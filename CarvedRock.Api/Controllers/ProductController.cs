@@ -1,5 +1,5 @@
+using CarvedRock.Data.Entities;
 using CarvedRock.Domain;
-using CarvedRock.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarvedRock.Api.Controllers;
@@ -18,9 +18,27 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<ProductModel>> GetAsync(string category = "all")
+    public async Task<IEnumerable<Product>> Get(string category = "all")
     {
-        _logger.LogInformation("Getting produts in Api for {category}", category);
+        _logger.LogInformation("Getting products in API for {category}", category);
         return await _productLogic.GetProductsForCategoryAsync(category);
+        //return _productLogic.GetProductsForCategory(category);
+    }
+
+    [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Get(int id)
+    {
+        _logger.LogDebug("Getting single product in API for {id}", id);
+        var product = _productLogic.GetProductById(id);
+        if (product != null)
+        {
+            return Ok(product);
+        }
+
+        _logger.LogWarning("Not product found for ID: {id}", id);
+
+        return NotFound();
     }
 }
