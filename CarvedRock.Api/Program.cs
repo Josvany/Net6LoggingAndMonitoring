@@ -1,8 +1,10 @@
 using System.Diagnostics;
 using CarvedRock.Data;
 using CarvedRock.Domain;
+using Hellang.Middleware.ProblemDetails;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddProblemDetails();
 //builder.Logging.AddFilter("CarvedRock", LogLevel.Debug);
 
 // var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -22,6 +24,8 @@ builder.Services.AddDbContext<LocalContext>();
 builder.Services.AddScoped<ICarvedRockRepository, CarvedRockRepository>();
 
 var app = builder.Build();
+
+app.UseProblemDetails();
 
 using (var scope = app.Services.CreateScope())
 {
