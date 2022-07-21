@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using CarvedRock.Api;
 using CarvedRock.Data;
 using CarvedRock.Domain;
 using Hellang.Middleware.ProblemDetails;
@@ -25,6 +26,7 @@ builder.Services.AddScoped<ICarvedRockRepository, CarvedRockRepository>();
 
 var app = builder.Build();
 
+app.UseMiddleware<CriticalExceptionMiddleware>();
 app.UseProblemDetails();
 
 using (var scope = app.Services.CreateScope())
